@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import MainLayout from "./layouts/MainLayout";
 import Zagruzka from "./components/Zagruzka";
 import Grid from "./components/Grid";
 import Player from "./components/Player";
+import Switcher from "./components/Switcher";
+import Menu from "./components/Menu";
 
 function App() {
   const [grid, setGrid] = useState([
@@ -21,7 +23,34 @@ function App() {
   const [playerOneMoves, setPlayerOneMoves] = useState([]);
   const [playerTwoMoves, setPlayerTwoMoves] = useState([]);
   const [gameResult, setGameResult] = useState("");
+  const [theme, setTheme] = useState("light");
+  const [start, setStart] = useState(true);
 
+  //start the game
+  const handleStart = () => {
+    setStart(false);
+  };
+
+  //quit the game -- close browser tab
+  const handleQuit = () => {
+    window.close();
+  };
+
+  //listen to every theme update/change
+  useEffect(() => {
+    if (theme === "dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, [theme]);
+
+  //change theme
+  const handleSwitch = () => {
+    setTheme(theme === "dark" ? "light" : "dark");
+  };
+
+  //play tic-tac-toe
   function handlePlay(elementID) {
     if (gameResult) {
       return;
@@ -52,6 +81,7 @@ function App() {
     check(currentPlayerMoves);
   }
 
+  //check for the winner
   function check(currentPlayerMoves) {
     const winningCombinations = [
       [1, 2, 3],
@@ -78,14 +108,17 @@ function App() {
 
   return (
     <MainLayout>
-      {gameResult ? (
+      {start ? (
+        <Menu handleStart={handleStart} handleQuit={handleQuit} />
+      ) : gameResult ? (
         <div className="absolute top-20 inset-x-0 flex items-center justify-center text-5xl font-bold text-green">
           {gameResult}
         </div>
       ) : (
         <Player player={player} />
       )}
-      <Grid grid={grid} handlePlay={handlePlay} />
+      <Grid grid={grid} handlePlay={handlePlay} theme={theme} />
+      <Switcher handleSwitch={handleSwitch} />
     </MainLayout>
   );
 }
