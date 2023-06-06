@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 function Menu(props) {
   return (
     <div className="flex flex-col justify-center items-center h-screen gap-y-10">

@@ -33,6 +33,7 @@ function App() {
 
   //quit the game -- close browser tab
   const handleQuit = () => {
+    console.log("clicked quit");
     window.close();
   };
 
@@ -101,24 +102,70 @@ function App() {
     if (isWinner) {
       const winner = user ? "X" : "O";
       setGameResult(`Player ${winner} wins!`);
+      setTimeout(() => {
+        setGameResult("");
+        setPlayer(true);
+        setUser(true);
+        setStart(true);
+        setGrid([
+          { id: 1, text: "" },
+          { id: 2, text: "" },
+          { id: 3, text: "" },
+          { id: 4, text: "" },
+          { id: 5, text: "" },
+          { id: 6, text: "" },
+          { id: 7, text: "" },
+          { id: 8, text: "" },
+          { id: 9, text: "" },
+        ]);
+      }, 10000);
+      setPlayerOneMoves([]);
+      setPlayerTwoMoves([]);
     } else if (playerOneMoves.length + playerTwoMoves.length === 9) {
       setGameResult("Draw!");
+      setTimeout(() => {
+        setGameResult("");
+        setPlayer(true);
+        setUser(true);
+        setStart(true);
+        setGrid([
+          { id: 1, text: "" },
+          { id: 2, text: "" },
+          { id: 3, text: "" },
+          { id: 4, text: "" },
+          { id: 5, text: "" },
+          { id: 6, text: "" },
+          { id: 7, text: "" },
+          { id: 8, text: "" },
+          { id: 9, text: "" },
+        ]);
+        setPlayerOneMoves([]);
+        setPlayerTwoMoves([]);
+      }, 10000);
     }
   }
+
+  console.log(gameResult);
 
   return (
     <MainLayout>
       {start ? (
         <Menu handleStart={handleStart} handleQuit={handleQuit} />
       ) : gameResult ? (
-        <div className="absolute top-20 inset-x-0 flex items-center justify-center text-5xl font-bold text-green">
-          {gameResult}
-        </div>
+        <>
+          <div className="absolute top-20 inset-x-0 flex items-center justify-center text-5xl font-bold text-green">
+            {gameResult}
+          </div>
+          <Grid grid={grid} handlePlay={handlePlay} theme={theme} />
+          <Switcher handleSwitch={handleSwitch} />
+        </>
       ) : (
-        <Player player={player} />
+        <>
+          <Player player={player} />
+          <Grid grid={grid} handlePlay={handlePlay} theme={theme} />
+          <Switcher handleSwitch={handleSwitch} />
+        </>
       )}
-      <Grid grid={grid} handlePlay={handlePlay} theme={theme} />
-      <Switcher handleSwitch={handleSwitch} />
     </MainLayout>
   );
 }
